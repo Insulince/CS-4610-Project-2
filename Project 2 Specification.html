@@ -1,0 +1,246 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!-- saved from url=(0148)https://mygateway.umsl.edu/bbcswebdav/pid-4023008-dt-content-rid-24990240_1/courses/UMSL-CMPSCI4610-E01-10479-SP2017/CS4610Spring2017Project2-3.html -->
+<html class="gr__mygateway_umsl_edu">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <title>CS4610 Spring 2017: Project 2-3. Develop Video-Based Learning Tool</title>
+    <style type="text/css">
+        body {
+            color: #333333;
+            margin: 0 auto;
+            font-size: 1em;
+            font-family: Verdana, "Verdana CE", Arial, "Arial CE", "Lucida Grande CE", lucida, "Helvetica CE", sans-serif;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 1.6em;
+            color: #333;
+            font-weight: normal;
+            padding: 10px;
+            margin: 20px 10px 10px 0px;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 1.3em;
+            color: black;
+            font-weight: normal;
+            padding: 5px 0px 2px 0px;
+            margin: 0px 0px 5px 0px;
+            border-bottom: 1px solid #D1d1d1;
+            text-align: left;
+        }
+
+        .baseFont {
+            font-size: 1.1em;
+            font-family: helvetica, arial, sans-serif;
+        }
+
+        .linegap1 {
+            line-height: 160%
+        }
+
+        .indent {
+            position: relative;
+            left: 1em;
+            width: 45em;
+        }
+
+        .ht1 {
+            height: 4em;
+        }
+
+        .ht1a {
+            height: 1em;
+        }
+
+        .inframe {
+            border: 2px solid;
+            position: relative;
+            margin: 0 auto;
+            top: 5px;
+            color: black;
+            border-color: #00BFFF;
+            width: 50em;
+            display: block;
+            padding: 1.5em;
+            text-align: left;
+            background-color: #FFF;
+        }
+
+        pre {
+            background-color: #FFF8E4;
+            padding: 10px;
+            font-size: 1.3em;
+            _font-size: 1.2em;
+        }
+
+        pre, samp, code, tt {
+            font-family: "Courier New", monospace;
+            font-size: 1.1em;
+            color: black;
+        }
+
+        .examplecode {
+            background-color: #FFF8E4;
+            overflow: auto;
+            width: 95%;
+        }
+    </style>
+</head>
+<body data-gr-c-s-loaded="true" cz-shortcut-listen="true">
+<div class="inframe baseFont linegap1">
+    <h1>Project 2-3. Develop Video-Based Learning Tool</h1>
+    <center>(Due 5/(7,14)/2017)</center>
+    <table>
+        <tbody>
+        <tr>
+            <td class="ht1a">&nbsp;</td>
+        </tr>
+        </tbody>
+    </table>
+    <p></p>
+    <p></p>
+    <h2>Description</h2>
+    <p></p>
+    <p></p>
+    <div class="indent linegap1">
+        Due to the time limitation, we make this project two parts: Part A (Quick references in videos)
+        and Part B (Quick video lesson production), so as to be treated as two projects in our plan.
+        For simplicity, all of our video sources come from YouTube through their URLs (or their YouTube IDs).
+        <p></p>
+        We will use the YouTube API to play the videos in this project. To help you develop this project,
+        I create an example <tt>VideoSample</tt> that uses the YouTube API to play a sequence of videos as
+        a playlist. You can find the zip file of this example associated with this project.
+        <p></p>
+        <b>Part A</b>: <i>Quick references in videos</i> &nbsp; (10 points)
+        <p></p>
+        Imagine in a typical video lesson, there are multiple concepts. After a student finishes the lesson,
+        he or she needs to work on the exercise questions based on this lesson. When a question is related to
+        a particular concept, usually this student may need to go back to the location of the concept in the
+        video to study it again. In order to make this concept reference fast and less painful, we need to
+        develop a feature by specifying the starting point and the duration for this concept in the video
+        lesson, so that the student can get to the right point by a simple click.
+        <p></p>
+        <b>Part B</b>: <i>Quick video lesson production</i> &nbsp; (10 points)
+        <p></p>
+        We know that creating a video lesson is very time consuming. Now we want to develop a feature in our
+        tool that can help us speed up video lesson production using the existing sources. Suppose that we want
+        to assemble a video lesson from several existing videos through a playlist. But for each individual video,
+        we do not want to include the whole video into the playlist, we only need to take part of the video in
+        our lesson. When we play the final playlist, we will go through those selected parts in individual videos
+        and view the whole lesson smoothly.
+        <p></p>
+    </div>
+    <table>
+        <tbody>
+        <tr>
+            <td class="ht1a">&nbsp;</td>
+        </tr>
+        </tbody>
+    </table>
+    <h2>Requirements</h2>
+    <p></p>
+    <ol>
+        <li><b>Database</b></li>
+        <p></p>
+        You need to create your own MySQL database to store the data, including video URLs, concepts,
+        and the reference information, for this project. When you submit your project, make sure that you
+        include the database script as a text file inside your project folder.
+        <p></p>
+        <li><b>User interface</b></li>
+        <p></p>
+        Design your user interface that supports the features for this project. It is not important
+        if it looks pretty or not, if only it functions well.
+        <p></p>
+        <p></p>
+        <li><b>Entering Video URLs</b></li>
+        <p></p>
+        We will assume that all the videos are hosted in YouTube, and we access them through their
+        YouTube URLs (or YouTube IDs).
+        <p></p>
+        <ul>
+            <li>Allow a user to enter a URL into the database through a simple interface. Before you
+                enter a new URL, check if it already exists. If it already exists, do not enter it.
+            </li>
+            <p></p>
+            <li>For simplicity, you are not required to show any error message if the URL already exists.</li>
+            <p></p>
+            <li>For each video, assign it a title to identify it. Later when we list the videos, we list
+                their titles.
+            </li>
+            <p></p>
+            <li>Enter the title and the URL at the same time. URL must be unique, but the title is not
+                required to be unique.
+            </li>
+        </ul>
+        <p></p>
+        <li><b>Listing the Videos</b></li>
+        <p></p>
+        In your page, list all the titles of the videos. The order is not important. For simplicity, display
+        all of them in one page.
+        <p></p>
+        <li><b>Tagging the Videos with Concepts (Part A)</b></li>
+        <p></p>
+        If a video has not been associated with concepts, we can tag it with a sequence of concepts separated by
+        commas. After a video is tagged, all the concepts are listed under the title. We do not require that
+        these concepts can be edited.
+        <p></p>
+        <li><b>Assigning Starting Point and Duration to Each Concept (Part A)</b></li>
+        <p></p>
+        For each concept associated with the video, you can assign the starting point and the duration
+        in seconds. Then you can play this video at this concept.
+        <p></p>
+        <li><b>Making Lessons from Existing Videos (Part B)</b></li>
+        <p></p>
+        In order to create a video lesson, we need to add existing videos to the lesson.
+        <p></p>
+        <ul>
+            <li>Create a lesson by entering the title for this lesson. After this lesson is created, it is
+                automatically set as the current lesson.
+            </li>
+            <p></p>
+            <li>In your video list, you can add a video to the current lesson by clicking a button.</li>
+            <p></p>
+            <li>Make sure that each video only appears in the lesson once.</li>
+        </ul>
+        <p></p>
+        <li><b>Generating the Playlists (Part B)</b></li>
+        <p></p>
+        Now we have a sequence of videos selected for a particular lesson.
+        <p></p>
+        <ul>
+            <li>For each video in the lesson, specify the starting point and duration in seconds, so that
+                only this part is played in the final playlist.
+            </li>
+            <p></p>
+            <li>In this project, we only need to choose one segment for each video in the lesson. In a
+                real world application, we allow multiple segments selected for each video.
+            </li>
+        </ul>
+        <p></p>
+        <li><b>Listing the Lessons (Part B)</b></li>
+        <p></p>
+        List all the generated lessons by their titles. Beside each title, attach a <b>Play</b> button, and
+        the user can play the lesson using its associated playlist.
+        <p></p>
+    </ol>
+    <p></p>
+    <b>Note</b>: In this project, we only do simulation. You do not need to make real lessons.
+    <table>
+        <tbody>
+        <tr>
+            <td class="ht1a">&nbsp;</td>
+        </tr>
+        <tr>
+            <td class="ht1a">&nbsp;</td>
+        </tr>
+        </tbody>
+    </table>
+    <center><span style="color: #D20106;">==========The End==========</span></center>
+</div>
+
+</body>
+</html>
