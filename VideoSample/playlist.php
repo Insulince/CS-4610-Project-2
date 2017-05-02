@@ -4,13 +4,13 @@ $dbuser = "root";
 $dbpassword = "";
 $dbname = "myvideodb";
 
-$con = mysql_connect($dbhost, $dbuser, $dbpassword);
+$connection = mysql_connect($dbhost, $dbuser, $dbpassword);
 
-if (!$con) {
+if (!$connection) {
     die('Could not connect: ' . mysql_error());
 }
 
-mysql_select_db($dbname, $con);
+mysql_select_db($dbname, $connection);
 
 $vidArr = array();
 $ytIdArr = array();
@@ -41,7 +41,7 @@ for ($u = 0; $u < count($ytIdArr); $u++) {
 
 $myplaylist = $myplaylist . "]";
 
-mysql_close($con);
+mysql_close($connection);
 ?>
 <!DOCTYPE html>
 <html>
