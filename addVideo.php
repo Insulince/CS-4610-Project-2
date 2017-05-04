@@ -1,7 +1,7 @@
 <?php
 $databaseHost = "localhost";
 $databaseUsername = "justin";
-$databasePassword = ""; //TODO b
+$databasePassword = "="; //TODO b
 $databaseName = "videodb";
 
 $connection = mysql_connect($databaseHost, $databaseUsername, $databasePassword);
@@ -43,7 +43,20 @@ if (isset($matches[0][0])) {
     die("The provided link is not a valid YouTube URL!");
 }
 
-$query = "INSERT INTO  `video` (`youtubeId`, `title`, `suggestedQuality`) VALUE('$newVideoYoutubeId', '$newVideoTitle', '$newVideoSuggestedQuality');";
+$query = "SELECT `youtubeId` FROM `video`;";
+
+$result = mysql_query($query);
+
+$uniqueVideo = true;
+if ($result) {
+    while ($row = mysql_fetch_assoc($result)) {
+        if ($newVideoYoutubeId == $row['youtubeId']) {
+            die("Error: Video with URL \"https://www.youtube.com/watch?v=".$newVideoYoutubeId."\" already exists, please enter a new video.<br/><button onclick='window.history.back();'>Go Back</button>");
+        }
+    }
+}
+
+$query = "INSERT INTO `video` (`youtubeId`, `title`, `suggestedQuality`) VALUE('$newVideoYoutubeId', '$newVideoTitle', '$newVideoSuggestedQuality');";
 
 $result = mysql_query($query);
 

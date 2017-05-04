@@ -1,7 +1,7 @@
 <?php
 $databaseHost = "localhost";
 $databaseUsername = "justin";
-$databasePassword = ""; //TODO c
+$databasePassword = "="; //TODO c
 $databaseName = "videodb";
 
 $connection = mysql_connect($databaseHost, $databaseUsername, $databasePassword);
@@ -35,19 +35,28 @@ if (isset($_GET['newConceptStartSeconds'])) {
 
 $newConceptEndSeconds = null;
 if (isset($_GET['newConceptEndSeconds'])) {
-    $newConceptEndSeconds = $newConceptStartSeconds + $_GET['newConceptEndSeconds'];
+    $newConceptEndSeconds = $_GET['newConceptEndSeconds'];
 } else {
     die('Error: The "newConceptEndSeconds" value was not sent, so I could not insert the new concept to the database!');
 }
 
-$newConceptSuggestedQuality = null;
-if (isset($_GET['newConceptSuggestedQuality'])) {
-    $newConceptSuggestedQuality = $_GET['newConceptSuggestedQuality'];
-} else {
-    die('Error: The "newConceptSuggestedQuality" value was not sent, so I could not insert the new concept to the database!');
+$timeStampFormat = '/^.+(?=:)/';
+preg_match_all($timeStampFormat, $newConceptStartSeconds, $matches, PREG_SET_ORDER, 0);
+
+if (isset($matches[0][0])) {
+    $newConceptStartSeconds = 60 * intval($matches[0][0]) + intval(substr($newConceptStartSeconds, strlen($newConceptStartSeconds) - 2));
 }
 
-$query = "INSERT INTO  `concept` (`vid`, `name`, `startSeconds`, `endSeconds`, `suggestedQuality`) VALUE('$newConceptVid', '$newConceptName', '$newConceptStartSeconds', '$newConceptEndSeconds', '$newConceptSuggestedQuality');";
+unset($matches);
+preg_match_all($timeStampFormat, $newConceptEndSeconds, $matches, PREG_SET_ORDER, 0);
+
+if (isset($matches[0][0])) {
+    $newConceptEndSeconds = $newConceptEndSeconds + 60 * intval($matches[0][0]) + intval(substr($newConceptEndSeconds, strlen($newConceptEndSeconds) - 2));
+} else {
+    $newConceptEndSeconds = $newConceptStartSeconds + $newConceptEndSeconds;
+}
+
+$query = "INSERT INTO  `concept` (`vid`, `name`, `startSeconds`, `endSeconds`) VALUE('$newConceptVid', '$newConceptName', '$newConceptStartSeconds', '$newConceptEndSeconds');";
 
 $result = mysql_query($query);
 

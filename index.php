@@ -1,7 +1,7 @@
 <?php
 $databaseHost = "localhost";
 $databaseUsername = "justin";
-$databasePassword = ""; //TODO a
+$databasePassword = "="; //TODO a
 $databaseName = "videodb";
 
 $connection = mysql_connect($databaseHost, $databaseUsername, $databasePassword);
@@ -27,8 +27,6 @@ if ($result) {
         $videoVidArray[] = $row["vid"];
         $videoYoutubeIdArray[] = $row["youtubeId"];
         $videoTitleArray[] = $row["title"];
-        $videoStartSecondsArray[] = $row["startSeconds"];
-        $videoEndSecondsArray[] = $row["endSeconds"];
         $videoSuggestedQualityArray[] = $row["suggestedQuality"];
     }
 }
@@ -38,7 +36,6 @@ $conceptVidArray = array();
 $conceptNameArray = array();
 $conceptStartSecondsArray = array();
 $conceptEndSecondsArray = array();
-$conceptSuggestedQualityArray = array();
 
 $query = "SELECT * FROM `concept`";
 $result = mysql_query($query);
@@ -50,7 +47,6 @@ if ($result) {
         $conceptNameArray[] = $row["name"];
         $conceptStartSecondsArray[] = $row["startSeconds"];
         $conceptEndSecondsArray[] = $row["endSeconds"];
-        $conceptSuggestedQualityArray[] = $row["suggestedQuality"];
     }
 }
 
@@ -109,7 +105,6 @@ mysql_close($connection);
         const TRUE = 1;
         const FALSE = 0;
         let player;
-        let currentVideoIndex = 0;
         let currentVideoHasStartedPlaying = false;
         let videoList = [
             <?php
@@ -117,8 +112,8 @@ mysql_close($connection);
             {
                 "vid": <?php print $videoVidArray[$i]; ?>,
                 "videoId": "<?php print $videoYoutubeIdArray[$i]; ?>",
-                "startSeconds": <?php print $videoStartSecondsArray[$i]; ?>,
-                "endSeconds": <?php print $videoEndSecondsArray[$i]; ?>,
+                "startSeconds": 0,
+                "endSeconds": 999999999,
                 "suggestedQuality": "<?php print $videoSuggestedQualityArray[$i]; ?>",
             }<?php if ($i < count($videoVidArray) - 1) print ",";?>
             <?php
@@ -131,7 +126,7 @@ mysql_close($connection);
                 "vid": "<?php print $conceptVidArray[$i]; ?>",
                 "startSeconds": <?php print $conceptStartSecondsArray[$i]; ?>,
                 "endSeconds": <?php print $conceptEndSecondsArray[$i]; ?>,
-                "suggestedQuality": "<?php print $conceptSuggestedQualityArray[$i]; ?>",
+                "suggestedQuality": getVideoObjectOfVideoWithVid(<?php print $conceptVidArray[$i]; ?>).suggestedQuality,
             }<?php if ($i < count($conceptCidArray) - 1) print ",";?>
             <?php
             } ?>
@@ -142,10 +137,10 @@ mysql_close($connection);
             player = new YT.Player("embedded-youtube-player", {
                 height: "350",
                 width: "520",
-                videoId: videoList[currentVideoIndex].videoId,
+                videoId: videoList[0].videoId,
                 playerVars: {
-                    "start": videoList[currentVideoIndex].startSeconds,
-                    "end": videoList[currentVideoIndex].endSeconds,
+                    "start": 0,
+                    "end": 999999999,
                     "disablekb": TRUE,
                     "controls": TRUE,
                     "rel": FALSE,
@@ -156,7 +151,6 @@ mysql_close($connection);
                     "onReady": (event) => {
                         console.log("EYTP: EYTP is ready, starting first video...");
                         event.target.playVideo();
-                        currentVideoIndex++;
                     },
                     "onStateChange": (event) => {
                         console.log("EYTP: State changed to \"" + interpretState(event.data) + "\".");
@@ -168,17 +162,6 @@ mysql_close($connection);
                         }
                         if (event.data == YT.PlayerState.ENDED && currentVideoHasStartedPlaying == true) {
                             console.log("EYTP: Current video ended.");
-                            console.log($('#autoplay')[0].checked);
-                            if ($('#autoplay')[0].checked) {
-                                if (currentVideoIndex < videoList.length) {
-                                    console.log("EYTP: Starting next video...");
-                                    loadVideo(currentVideoIndex);
-                                    currentVideoIndex++;
-                                    currentVideoHasStartedPlaying = false;
-                                } else {
-                                    console.log("EYTP: Reached the end of the current videoList.");
-                                }
-                            }
                         }
                     },
                     "onPlaybackQualityChange": (event) => {
@@ -218,41 +201,38 @@ mysql_close($connection);
                 "endSeconds": videoList[vid].endSeconds,
                 "suggestedQuality": videoList[vid].suggestedQuality
             });
+            currentVideoHasStartedPlaying = true;
         }
 
         function nextVideo() {
             console.log("\"Next Video\" button clicked.");
-            currentVideoIndex++;
-            loadVideo(currentVideoIndex);
+//            loadVideo(currentVideoIndex);
         }
 
         function previousVideo() {
             console.log("\"Previous Video\" button clicked.");
-            currentVideoIndex--;
-            loadVideo(currentVideoIndex);
+//            loadVideo(currentVideoIndex);
         }
 
         function loadConcept(cid) {
-            console.error(cid);
-            console.log("Loading video with cid \"" + cid + "\".")
-            let videoId = getVideoIdOfVideoWithVid(conceptList[cid].vid);
+            console.log("Loading video with cid \"" + cid + "\".");
             player.loadVideoById({
-                "videoId": videoId,
+                "videoId": getVideoObjectOfVideoWithVid(conceptList[cid].vid).videoId,
                 "startSeconds": conceptList[cid].startSeconds,
                 "endSeconds": conceptList[cid].endSeconds,
                 "suggestedQuality": conceptList[cid].suggestedQuality
             })
         }
 
-        function getVideoIdOfVideoWithVid(vid) {
-            let videoId = null;
-            videoList.forEach((video) => {
-                    if (video.vid == vid) {
-                        videoId = video.videoId;
-                    }
+        function getVideoObjectOfVideoWithVid(vid) {
+            let video = null;
+            videoList.forEach((currentVideo) => {
+                if (currentVideo.vid == vid) {
+                    video = currentVideo
+                }
             });
 
-            return videoId;
+            return video;
         }
     </script>
 </head>
@@ -271,18 +251,13 @@ mysql_close($connection);
                             </div>
                             <div class="row bordered">
                                 <div class="col-md-2 padding">
-                                    <button class="btn btn-primary video-nav-button" onclick="previousVideo();">Previous Video</button>
+                                    <button class="btn btn-primary video-nav-button" onclick="previousVideo();" disabled>Previous Video</button>
                                 </div>
                                 <div class="col-md-8 bordered padding">
                                     <div id="embedded-youtube-player">Your browser does not support YouTube's embedded video player (or something went wrong, check the console. In Google Chrome press F12 then click Console).</div>
                                 </div>
                                 <div class="col-md-2 padding">
-                                    <button class="btn btn-primary video-nav-button" onclick="nextVideo();">Next Video</button>
-                                </div>
-                            </div>
-                            <div class="row bordered">
-                                <div class="col-md-10 col-md-offset-1 padding">
-                                    <span><input type="checkbox" id="autoplay" checked/>Autoplay Next Video</span>
+                                    <button class="btn btn-primary video-nav-button" onclick="nextVideo();" disabled>Next Video</button>
                                 </div>
                             </div>
                         </div>
@@ -316,7 +291,7 @@ mysql_close($connection);
                                                     <option>hd720</option>
                                                     <option>large</option>
                                                     <option>medium</option>
-                                                    <option>small </option>
+                                                    <option>small</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -367,7 +342,7 @@ mysql_close($connection);
                                                             <input type="hidden" name="newConceptVid" value="<?php print $videoVidArray[$i]; ?>">
                                                             <div class="form-group">
                                                                 <label for="videoUrl">YouTube Video URL:</label>
-                                                                <input type="url" class="form-control" id="videoUrl" name="videoUrl" value="<?php print "https://www.youtube.com/watch?v=".$videoYoutubeIdArray[$i]; ?>" disabled>
+                                                                <input type="url" class="form-control" id="videoUrl" name="videoUrl" value="<?php print "https://www.youtube.com/watch?v=" . $videoYoutubeIdArray[$i]; ?>" disabled>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label for="videoTitle">Video Title:</label>
@@ -384,18 +359,6 @@ mysql_close($connection);
                                                             <div class="form-group">
                                                                 <label for="newConceptEndSeconds">Duration:</label>
                                                                 <input type="text" class="form-control" id="newConceptEndSeconds" name="newConceptEndSeconds" placeholder="How long the concept should be for this video."/>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label for="newConceptSuggestedQuality">Video Quality:</label>
-                                                                <select class="form-control" id="newConceptSuggestedQuality" name="newConceptSuggestedQuality">
-                                                                    <option selected>default</option>
-                                                                    <option>highres</option>
-                                                                    <option>hd1080</option>
-                                                                    <option>hd720</option>
-                                                                    <option>large</option>
-                                                                    <option>medium</option>
-                                                                    <option>small </option>
-                                                                </select>
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
