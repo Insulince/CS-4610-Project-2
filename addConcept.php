@@ -56,7 +56,7 @@ if (isset($matches[0][0])) {
     $newConceptEndSeconds = $newConceptStartSeconds + $newConceptEndSeconds;
 }
 
-$query = "INSERT INTO  `concept` (`vid`, `name`, `startSeconds`, `endSeconds`) VALUE('$newConceptVid', '$newConceptName', '$newConceptStartSeconds', '$newConceptEndSeconds');";
+$query = "INSERT INTO  `concept` (`vid`, `name`, `startSeconds`, `endSeconds`) VALUE('" . mysql_real_escape_string($newConceptVid) . "', '" . mysql_real_escape_string($newConceptName) . "', '" . mysql_real_escape_string($newConceptStartSeconds) . "', '" . mysql_real_escape_string($newConceptEndSeconds) . "');";
 
 $result = mysql_query($query);
 

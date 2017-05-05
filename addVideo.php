@@ -51,12 +51,12 @@ $uniqueVideo = true;
 if ($result) {
     while ($row = mysql_fetch_assoc($result)) {
         if ($newVideoYoutubeId == $row['youtubeId']) {
-            die("Error: Video with URL \"https://www.youtube.com/watch?v=".$newVideoYoutubeId."\" already exists, please enter a new video.<br/><button onclick='window.history.back();'>Go Back</button>");
+            die("Error: Video with URL \"https://www.youtube.com/watch?v=" . $newVideoYoutubeId . "\" already exists, please enter a new video.<br/><button onclick='window.history.back();'>Go Back</button>");
         }
     }
 }
 
-$query = "INSERT INTO `video` (`youtubeId`, `title`, `suggestedQuality`) VALUE('$newVideoYoutubeId', '$newVideoTitle', '$newVideoSuggestedQuality');";
+$query = "INSERT INTO `video` (`youtubeId`, `title`, `suggestedQuality`) VALUE('" . mysql_real_escape_string($newVideoYoutubeId) . "', '" . mysql_real_escape_string($newVideoTitle) . "', '" . mysql_real_escape_string($newVideoSuggestedQuality) . "');";
 
 $result = mysql_query($query);
 
