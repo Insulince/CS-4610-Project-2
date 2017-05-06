@@ -1,0 +1,98 @@
+DROP DATABASE IF EXISTS `videodb`;
+CREATE DATABASE IF NOT EXISTS `videodb`;
+
+#
+#
+#
+
+USE `videodb`;
+
+DROP TABLE IF EXISTS `video`;
+CREATE TABLE IF NOT EXISTS `video` (
+  `vid`              INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `youtubeId`        VARCHAR(11)      NOT NULL,
+  `title`            VARCHAR(255)     NOT NULL,
+  `suggestedQuality` VARCHAR(255)     NOT NULL DEFAULT 'default',
+  PRIMARY KEY (vid)
+)
+  ENGINE = InnoDB
+  AUTO_INCREMENT = 0
+  DEFAULT CHARSET = latin1;
+
+INSERT INTO `video` (`youtubeId`, `title`) VALUES
+  ('O8lFeVfYw_s', 'Aminé - REDMERCEDES'),
+  ('4is83n8xfLY', 'KYLE - iSpy (feat. Lil Yachty) [Lyric Video]'),
+  ('3j8ecF8Wt4E', 'Aminé - Caroline'),
+  ('uQ_DHRI-Xp0', 'ScHoolboy Q - THat Part ft. Kanye West'),
+  ('_nZfHt5G6UQ', 'Spooky Black - Without You'),
+  ('mmWVTqJloB8', 'THat Part (Black Hippy Remix)');
+
+
+SELECT *
+FROM video;
+
+#
+#
+#
+
+USE `videodb`;
+
+DROP TABLE IF EXISTS `concept`;
+CREATE TABLE IF NOT EXISTS `concept` (
+  `cid`              INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `vid`              INT(10) UNSIGNED NOT NULL,
+  `name`             VARCHAR(255)     NOT NULL,
+  `startSeconds`     INT(10) UNSIGNED NOT NULL,
+  `endSeconds`       INT(10) UNSIGNED NOT NULL,
+  PRIMARY KEY (cid)
+)
+  ENGINE = InnoDB
+  AUTO_INCREMENT = 0
+  DEFAULT CHARSET = latin1;
+
+INSERT INTO `concept` (`vid`, `name`, `startSeconds`, `endSeconds`) VALUES
+  (6, 'Kendrick Lamar''s Portion', 109, 155);
+
+SELECT *
+FROM concept;
+
+#
+#
+#
+
+USE `videodb`;
+
+DROP TABLE IF EXISTS `lesson`;
+CREATE TABLE IF NOT EXISTS `lesson` (
+  `lid`          INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `title`        VARCHAR(255)     NOT NULL,
+  PRIMARY KEY (lid)
+)
+  ENGINE = InnoDB
+  AUTO_INCREMENT = 0
+  DEFAULT CHARSET = latin1;
+
+SELECT *
+FROM lesson;
+
+#
+#
+#
+
+USE `videodb`;
+
+DROP TABLE IF EXISTS `lessonVideo`;
+CREATE TABLE IF NOT EXISTS `lessonVideo` (
+  `lvid`         INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `lid`          INT(10) UNSIGNED NOT NULL,
+  `vid`          INT(10) UNSIGNED NOT NULL,
+  `startSeconds` INT(10) UNSIGNED NOT NULL,
+  `endSeconds`   INT(10) UNSIGNED NOT NULL,
+  PRIMARY KEY (lvid)
+)
+  ENGINE = InnoDB
+  AUTO_INCREMENT = 0
+  DEFAULT CHARSET = latin1;
+
+SELECT *
+FROM lessonVideo;
